@@ -1,0 +1,30 @@
+{% set menu = [{"url": "index", "name": "Главная"},
+        {"url": "exercise", "name": "Упражнеия"},
+        {"url": "songs", "name": "Песни"},
+        ] %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light fs-5">
+    <div class="container-fluid py-6">
+        <a class="text-decoration-none text-dark fs-3" href="{{ url_for('index') }}">Учим Английский</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse nav-divider justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                {%- for item in menu -%}
+                    <li class="nav-item">
+                        {% if request.endpoint == item.url %}
+                            {% set active="active" %}
+                            {% set curient='aria-current="page"'|safe %}
+                        {% endif %}
+                        <a class="nav-link {{ active }}" {{ curient }} href="{{ url_for(item.url) }}"
+                           title="{{ item.name }}">
+                            {{ item.name }}
+                        </a>
+                    </li>
+                {%- endfor -%}
+            </ul>
+        </div>
+    </div>
+</nav>

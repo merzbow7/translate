@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for song in songs %}
+            <a class="text-decoration-none" href="{{ url_for("songs_name", name = song) }}">
+                <li class="list-group-item">{{ song }}</li>
+            </a>
+        {% endfor %}
+    </ul>
+{% endblock %}
