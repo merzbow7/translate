@@ -7,7 +7,7 @@ class Translate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     en = db.Column(db.String(25), unique=True, nullable=False)
     transcription = db.Column(db.String(25), unique=True)
-    ru = db.Column(db.String(25),  nullable=False)
+    ru = db.Column(db.String(25), nullable=False)
     repeat_date = db.Column(db.Date, default=datetime.now())
 
     def __repr__(self):
@@ -21,3 +21,13 @@ class Song(db.Model):
 
     def __repr__(self):
         return f'<{self.title}>'
+
+
+class EnglishWords(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    word = db.Column(db.String(50), unique=True, nullable=False)
+
+
+class RussianWords(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    word = db.Column(db.String(50), unique=True, nullable=False)

@@ -3,7 +3,7 @@
 {% block content %}
     <ul class="list-group">
         {% for song in songs %}
-            <a class="text-decoration-none" href="{{ url_for("songs_name", name = song) }}">
+            <a class="text-decoration-none" href="{{ url_for("main.songs_name", name = song) }}">
                 <li class="list-group-item">{{ song }}</li>
             </a>
         {% endfor %}

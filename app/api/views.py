@@ -1,25 +1,14 @@
 from json import loads
 
-from flask import render_template, redirect, url_for, request, jsonify
-from sqlalchemy.exc import SQLAlchemyError
+from flask import render_template, request, jsonify, Response
 
-from app import app, db
-from english_tool import get_words_from_url
-from forms import URLForm
-from models import Translate, Song
-
-
-@app.route("/", methods=["GET", "POST"])
-def index():
-    url_form = URLForm()
-    if url_form.validate_on_submit():
-        return redirect(url_for('exercise', from_url=url_form.url.data))
-    return render_template("index.html",
-                           url_form=url_form,
-                           )
+from app import db
+from app.api import bp
+from app.models import Translate, Song
+from utils.parse_words import make_en_ru_dict
 
 
-@app.route("/words/<count>", methods=["GET"])
+@bp.route("/api/words/<count>", methods=["GET"])
 def words_count(count):
     if isinstance(count, int) or count.isdigit():
         return jsonify({item.en: item.ru for item in Translate.query.all()[:int(count)]})
@@ -30,7 +19,7 @@ def words_count(count):
                         })
 
 
-@app.route("/songs/<name>/lyric", methods=["GET"])
+@bp.route("/api/songs/<name>/lyric", methods=["GET"])
 def lyric(name):
     song = Song.query.filter_by(title=name)
     if song:
@@ -43,17 +32,11 @@ def lyric(name):
                         })
 
 
-@app.route("/words", methods=["GET"])
-def get_words():
-    return render_template("words.html")
-
-
-@app.route("/words/json", methods=["GET", "POST"])
+@bp.route("/api/words/json", methods=["GET", "POST"])
 def get_translate():
     if request.method == "POST":
         data = loads(request.get_data())
         words = data.get("words", False)
-        print(data)
         error = False
         error_name = ""
         if words:
@@ -83,24 +66,23 @@ def get_translate():
             return jsonify(result)
 
 
-@app.route("/exercise")
+@bp.route("/api/exercise")
 def exercise():
     request_page = request.args.get('from_url')
     if request_page:
-        content = get_words_from_url(request_page)
+        content = make_en_ru_dict(request_page)
+        template = "url_exercise.html"
     else:
         content = Translate.query.all()
-    return render_template("exercise.html",
-                           main_content=content[:8],
-                           )
+        template = "exercise.html"
+    return render_template(template, main_content=content[:20], )
 
 
-@app.route("/songs")
+@bp.route("/api/songs")
 def songs():
-    songs = [song.title for song in Song.query.all()]
-    return render_template("songs.html", songs=songs)
+    return jsonify([song.title for song in Song.query.all()])
 
 
-@app.route("/songs/<name>")
+@bp.route("/api/songs/<name>")
 def songs_name(name):
-    return render_template("song_test.html")
+    return jsonify(Song.query.filter_by(songs_name=name).first())

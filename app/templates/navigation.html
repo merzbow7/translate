@@ -1,11 +1,11 @@
-{% set menu = [{"url": "index", "name": "Главная"},
-        {"url": "exercise", "name": "Упражнеия"},
-        {"url": "songs", "name": "Песни"},
+{% set menu = [{"url": "main.index", "name": "Главная"},
+        {"url": "main.exercise", "name": "Упражнеия"},
+        {"url": "main.songs", "name": "Песни"},
         ] %}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light fs-5">
     <div class="container-fluid py-6">
-        <a class="text-decoration-none text-dark fs-3" href="{{ url_for('index') }}">Учим Английский</a>
+        <a class="text-decoration-none text-dark fs-3" href="{{ url_for('main.index') }}">Учим Английский</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
